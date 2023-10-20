@@ -1,0 +1,5 @@
+# HHS NRF52832 board configuration
+
+config BOARD_HHS_NRF52832
+	bool "HHS NRF52832"
+	depends on SOC_NRF52832_QFAA

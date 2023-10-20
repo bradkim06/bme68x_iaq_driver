@@ -1,0 +1,1 @@
+add_subdirectory_ifdef(CONFIG_BME68X bme68x_iaq)

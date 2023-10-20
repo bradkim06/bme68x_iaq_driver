@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2023 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+config BME68X
+	bool "BME68X sensor"
+	default n
+	depends on DT_HAS_BOSCH_BME68X_ENABLED
+	select I2C if $(dt_compat_on_bus,$(DT_COMPAT_BOSCH_BME68X),i2c)
+	help
+	  Enable driver for BME68X I2C- or SPI- based temperature, pressure, humidity and gas sensor.
+
+config BME68X_IAQ
+	bool "Use Bosch BSEC library"
+	depends on SETTINGS && !SETTINGS_NONE
+	depends on BME68X
+	help
+	  Enable the use of Bosch BSEC library.
+	  This configuration depends on the BME680 Zephyr driver being disabled.
+
+if BME68X
+
+config BME68X_IAQ_SAVE_INTERVAL_MINUTES
+	int "Period in minutes after which BSEC state is saved to flash"
+	default 60
+
+config BME68X_IAQ_THREAD_STACK_SIZE
+	int "BSEC thread stack size"
+	default 4096
+
+config BME68X_IAQ_EXPECTED_AMBIENT_TEMP
+	int "Expected ambient temperature in C"
+	default 25
+
+config BME68X_IAQ_TEMPERATURE_OFFSET
+	int "BSEC temperature offset in centidegrees"
+	default 200
+	help
+	  BSEC temperature offset. To account for external heat sources on the board.
+	  The actual value is divided by 100. This is due to the Kconfig parser
+	  not supporting floating point types.
+	  The default value 200 is translated to 2.0 degrees celsius offset.
+
+module = BME68X
+module-str = BME68X
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # BME68X
